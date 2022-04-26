@@ -24,7 +24,20 @@ The New-AzureADGroupAppRoleAssignment cmdlet assigns a group of users to an appl
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+#Retreive the service principal object ID
+$appname = Read-Host "Enter your App's Display Name"
+$spo = Get-AzureADServicePrincipal -Filter "Displayname eq '$appname'"
+
+#Get the Azure AD group name that needs the role to be assigned
+$group = Read-Host "Enter your Azure AD group Name"
+$id = Get-AzureADGroup -SearchString $group
+
+#Get name of the application role
+$app_role_name = Read-Host "Enter your Application's role"
+$app_role = $spo.AppRoles | Where-Object { $_.DisplayName -eq $app_role_name }
+
+#For role assignment, run the following command
+New-AzureADGroupAppRoleAssignment -ObjectId $id.ObjectId -PrincipalId $id.ObjectId -ResourceId $spo.ObjectId -Id $app_role.Id
 ```
 
 {{ Add example description here }}
